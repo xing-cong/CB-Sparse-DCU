@@ -63,6 +63,26 @@ The scripts build their corresponding executables and run the three matrices inc
 - `heart2.mtx`
 - `sme3Da.mtx`
 
+## Slurm batch runs
+
+The scripts in [`run_all/`](run_all/) request one DCU from the `hx1hdnormal01` partition, load DTK 25.04.4, call `run.py`, and execute every `.mtx` file in `data/`. Each job writes its complete output to a job-specific log under `run_all/log/`.
+
+Submit the three benchmarks with:
+
+```bash
+sbatch run_all/run_cbspmv_dcu.slurm
+sbatch run_all/run_hipsparse.slurm
+sbatch run_all/run_hipsparse_csr.slurm
+```
+
+To use another absolute matrix directory, pass it as the first script argument:
+
+```bash
+sbatch run_all/run_cbspmv_dcu.slurm /absolute/path/to/matrix_set
+```
+
+The resulting log names are `run_cbspmv_dcu_<jobid>.log`, `run_hipsparse_bsr_<jobid>.log`, and `run_hipsparse_csr_<jobid>.log`.
+
 ## Running another matrix
 
 To run another Matrix Market (`.mtx`) matrix, enter the corresponding source directory, build the executable, and pass the matrix's **absolute path**.
@@ -178,6 +198,11 @@ cb-spmv-dcu/
 │   ├── run_cbspmv_dcu.sh
 │   ├── run_hipsparse.sh
 │   └── run_hipsparse_csr.sh
+├── run_all/
+│   ├── run_cbspmv_dcu.slurm
+│   ├── run_hipsparse.slurm
+│   ├── run_hipsparse_csr.slurm
+│   └── log/              # Slurm job logs
 ├── assets/
 │   └── cb-spmv-slides.pdf
 └── README.md

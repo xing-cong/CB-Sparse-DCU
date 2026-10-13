@@ -113,6 +113,7 @@ int main(int argc, char* argv[]) {
     std::vector<double> best_result(matrix.rows, 0.0);
     std::string best_algorithm;
     double best_time = 0.0;
+    PROGRAM_METRICS best_metrics;
 
     for (const AlgorithmConfig& config : algorithms) {
         std::size_t workspace_size = 0;
@@ -166,6 +167,7 @@ int main(int argc, char* argv[]) {
         if (best_algorithm.empty() || metrics.comp_time < best_time) {
             best_algorithm = config.name;
             best_time = metrics.comp_time;
+            best_metrics = metrics;
             CHECK_HIP(hipMemcpy(best_result.data(), device_y,
                                 best_result.size() * sizeof(double),
                                 hipMemcpyDeviceToHost));
@@ -195,5 +197,8 @@ int main(int argc, char* argv[]) {
     print_benchmark_report(
         matrix_name, matrix.rows, matrix.columns, matrix.nonzeros(),
         benchmark_results, best_algorithm, result_is_correct);
+    writeCSV(
+        "/public/home/congxing/CB-Sparse-DCU/cb-spmv-dcu/run_all/csv/hipsparse_csr.csv",
+        best_metrics, matrix_name, matrix.nonzeros());
     return result_is_correct ? EXIT_SUCCESS : EXIT_FAILURE;
 }

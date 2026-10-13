@@ -82,7 +82,7 @@ int main(int argc, char **argv)
         gb_block_gather,
         spmv_metrics,
         result_is_correct);
-    // writeCSV("cb_spmv.csv", spmv_metrics, mtx_name, mtx_nnz);
+    writeCSV("/public/home/congxing/CB-Sparse-DCU/cb-spmv-dcu/run_all/csv/cb_spmv.csv", spmv_metrics, mtx_name, mtx_nnz);
     CHECK_HIP(hipDeviceReset());
     return result_is_correct ? 0 : 1;
 }

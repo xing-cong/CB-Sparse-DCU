@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -104,4 +105,24 @@ inline void print_benchmark_report(
               << (result_is_correct ? "PASS" : "FAIL")
               << COLOR_RESET << '\n'
               << divider << '\n';
+}
+
+inline bool writeCSV(
+    const std::string& filename,
+    const PROGRAM_METRICS& metrics,
+    const std::string& matrix_name,
+    int nonzeros) {
+    std::ofstream file(filename, std::ios::app);
+    if (!file) {
+        Error("Failed to open " + filename);
+        return false;
+    }
+
+    file << matrix_name << ','
+         << nonzeros << ','
+         << metrics.comp_time << ','
+         << metrics.gflops << '\n';
+    file.close();
+    std::cout << "[Info]: Data written to " << filename << " successfully.\n";
+    return true;
 }
